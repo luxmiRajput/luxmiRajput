@@ -1,1 +1,204 @@
+tictoctoe.html code
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Toc Toe</title>
+    <link  rel="stylesheet" href="tic toctoe.css"/>
+</head>
+<body>
+    <div class="msg-container">
+        <p id="msg">Winner</p>
+        <button id="new-btn">New Game</button> 
+    </div>
+    <main>
+        <h1>Tic Toc Toe</h1>
+        <div class="container">
+            <div class="game">
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+            <button class="box"></button>
+        </div>
+    </div>
+      <button id="reset-btn">Reset</button>  
+    </main>
+    <script src="tictoctoe.js"></script>
+</body>
+</html>
+
+tictoctoe.css code:-
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-color:rgb(132, 206, 235) ;
+    text-align: center;
+}
+h1{
+    color:rgb(3, 3, 75) ;
+}
+.container{
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.game{
+     height: 60vmin;
+     width: 60vmin;
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     align-items: center;
+     gap: 1.5vmin;
+}
+.box{
+    height:18vmin;
+    width:18vmin;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0 1rem #F652A0 ;
+    font-size: 8vmin; 
+    color:#4C5270 ;
+    background-color:#e83c8f;
+}
+#reset-btn{
+    padding: 1rem;
+    font-size:1.25rem ;
+    background-color:#4C5270 ;
+    color: aliceblue;
+    border-radius:2rem ;
+    width:10rem ;
+    border-color:navy ;
+    box-shadow: #36EEE0;
+}
+#reset-btn:hover{
+    background-color:rgb(245, 62, 153) ;
+}
+#new-btn{
+    padding: 1rem;
+    font-size:1.25rem ;
+    background-color:#4C5270 ;
+    color: aliceblue;
+    border-radius:2rem ;
+    width:10rem ;
+    border-color:navy ;
+    box-shadow: #36EEE0;
+    margin-bottom:16vmin;
+}
+#msg{
+    color:crimson;
+    font-size:8vmin ;
+}
+.msg-container{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+    gap:4rem;
+}
+.hide{
+    display: none;
+}
+
+tictoctoe.js code:-
+let boxes = document.querySelectorAll(".box");
+let resetBtn = document.querySelector("#reset-btn");
+let newGameBtn = document.querySelector("#new-btn");
+let msgContainer = document.querySelector(".msg-container");
+let msg = document.querySelector("#msg");
+
+let turnO = true; //playerX, playerO
+let count = 0; //To Track Draw
+
+const winPatterns = [
+  [0, 1, 2],
+  [0, 3, 6],
+  [0, 4, 8],
+  [1, 4, 7],
+  [2, 5, 8],
+  [2, 4, 6],
+  [3, 4, 5],
+  [6, 7, 8],
+];
+
+const resetGame = () => {
+  turnO = true;
+  count = 0;
+  enableBoxes();
+  msgContainer.classList.add("hide");
+};
+
+boxes.forEach((box) => {
+  box.addEventListener("click", () => {
+    if (turnO) {
+      //playerO
+      box.innerText = "O";
+      turnO = false;
+    } else {
+      //playerX
+      box.innerText = "X";
+      turnO = true;
+    }
+    box.disabled = true;
+    count++;
+
+    let isWinner = checkWinner();
+
+    if (count === 9 && !isWinner) {
+      gameDraw();
+    }
+  });
+});
+
+const gameDraw = () => {
+  msg.innerText = 'Game was a Draw.';
+  msgContainer.classList.remove("hide");
+  disableBoxes();
+};
+
+const disableBoxes = () => {
+  for (let box of boxes) {
+    box.disabled = true;
+  }
+};
+
+const enableBoxes = () => {
+  for (let box of boxes) {
+    box.disabled = false;
+    box.innerText = "";
+  }
+};
+const showWinner = (Winner)=>{
+  msg.innerText = 'Congratulations Winner',$(Winner);
+  msgContainer.classList.remove("hide");
+  disableBoxes();
+};
+
+const checkWinner = () => {
+  for (let pattern of winPatterns) {
+    let pos1Val = boxes[pattern[0]].innerText;
+    let pos2Val = boxes[pattern[1]].innerText;
+    let pos3Val = boxes[pattern[2]].innerText;
+
+    if (pos1Val != "" && pos2Val != "" && pos3Val != "") {
+      if (pos1Val === pos2Val && pos2Val === pos3Val) {
+        showWinner(pos1Val);
+        return true;
+      }
+    }
+  }
+};
+
+newGameBtn.addEventListener("click", resetGame);
+resetBtn.addEventListener("click", resetGame);
 
